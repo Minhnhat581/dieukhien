@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>Điều khiển</title>
+  <link rel="icon" type="image/x-icon" href="./Trangchu_files/favorite.png">
+
+	<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script
+src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js">
+</script> 
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+<script>
+  function nhapHang(dat,b)
+    {
+        var request = new XMLHttpRequest();
+        var urlHere = "https://api.thingspeak.com/update?";
+        
+        urlHere = urlHere + "api_key=B7YEB991P32QMK16&field3="+ dat;      
+         if (parseInt(dat)<=40) {
+          request.open('GET', urlHere, true);
+          request.send();          
+        }else{
+          alert("Nhiệt độ không được bé hơn 35 và lớn hơn 39!");
+        }
+        setTimeout(function(){
+          b();
+        },100);
+    }
+  function xuatHang(dat,b)
+    {
+        var request = new XMLHttpRequest();
+        var urlHere = "https://api.thingspeak.com/update?";
+        urlHere = urlHere + "api_key=B7YEB991P32QMK16&field4="+ dat;
+        
+        if (parseInt(dat)>55){
+          request.open('GET', urlHere, true);
+          request.send();          
+        }else{
+          alert("Độ ẩm không được bé hơn 55 và lớn hơn 85!");
+        }
+        setTimeout(function(){
+          b();
+        },100);
+    }
+    function thongKe()
+    {
+        var request = new XMLHttpRequest();
+        var urlHere = "https://api.thingspeak.com/update?";
+        urlHere = "https://api.thingspeak.com/channels/1713664/feeds.json";
+        request.open('GET', urlHere, true);
+        request.onload = function() {
+            if (request.status == 200) {
+                var data = JSON.parse(request.responseText);
+                //console.log(data);
+                var length = data.feeds.length;  //kich thuoc du lieu
+                //loc bo cac phan tu null
+                dataTemp = new Array();
+                dataHumi = new Array();
+                dataT = new Array();
+                dataH = new Array();
+                for(i=0;i<length;i++){
+                  if (data.feeds[i].field1 != null){
+                    dataT.push(data.feeds[i].field1);
+                  }
+                  if (data.feeds[i].field2 != null){
+                    dataH.push(data.feeds[i].field2);
+                  }
+                  if (data.feeds[i].field3 != null){
+                    dataTemp.push(data.feeds[i].field3);
+                  }
+                  if (data.feeds[i].field4 != null){
+                    dataHumi.push(data.feeds[i].field4);
+                  }
+                }
+                // hiển thị số lượng 
+                Humi=0, Temp=0; H=0, T=0;
+                //tính do am
+                for(i=0;i<dataHumi.length;i++){
+                  Humi = parseInt(dataHumi[i]);
+                }
+                //tính nhiet đo
+                for(i=0;i<dataTemp.length;i++){
+                  Temp = parseInt(dataTemp[i]);
+                }      
+                for(i=0;i<dataH.length;i++){
+                  H = parseInt(dataH[i]);
+                }
+                for(i=0;i<dataT.length;i++){
+                  T = parseInt(dataT[i]);
+                }   
+
+                document.getElementById("thongke1").innerHTML = "Nhiệt độ cài đặt: " +Temp+"ºC " ;
+               	document.getElementById("thongke2").innerHTML = "Độ ẩm cài đặt: " +Humi+"%";
+               	document.getElementById("trangthai1").innerHTML = "Đèn nhiệt: " +T+"  (1:bật/0:tat) " ;
+               	document.getElementById("trangthai2").innerHTML = "Máy phun sương: " +H+"  (1:bật/0:tat)";
+                //Ve bieu đồ nhập xuất
+
+            } else {
+            // We reached our target server, but it returned an error
+            }
+        };
+        request.send();
+        
+
+        
+        //request.open('GET', urlHere, true);
+        //request.send();
+    }
+</script> 
+	<link rel="stylesheet" href="./dk_files/index.css">
+
+<style type="text/css">@font-face { font-family: Roboto; src: url("chrome-extension://mcgbeeipkmelnpldkobichboakdfaeon/css/Roboto-Regular.ttf"); }</style></head>
+
+<body _c_t_common="1" onload="thongKe()" >
+
+
+	<div class="root">
+
+		<!-- thanh điều hướng -->
+		<div id="header">
+
+
+
+	<title>Header</title>
+	
+	<link rel="shortcut icon" href="./anh/doan.png">
+
+	<link rel="stylesheet" href="./style.css">
+	<div class="background">
+		<header>
+			<div class="header_container">
+				<div class="header_logo">
+					<a href="https://www.ctu.edu.vn/">  <img src="./anh/doan.png" alt="Logo Đại học Cần Thơ" width="40"></a>
+				</div>
+				<div class="wide">
+					<nav class="header_nav">
+						<ul>
+							<li><a href="file:///C:/Users/ADMIN/Desktop/DOANIOT/index.html"><i class="fa fa-fw fa-home"></i>trang chủ</a></li>
+                    <li><a href="file:///C:/Users/ADMIN/Desktop/DOANIOT/thanviennhom.html"><i class="fa fa-user-plus" aria-hidden="true"></i>thành viên</a></li>
+               
+                    <li><a href="#">    <i class="fa fa-caret-down"></i> Điều khiển & theo dõi Hệ thống  </a>
+                <ul class="sub">
+                  <li><a href="file:///C:/Users/ADMIN/Desktop/DOANIOT/dieukhien.html"><i class="fa fa-cog" aria-hidden="true"></i>thiết lập thông số </a></li>
+                    
+                      </ul>
+                      <li><a href="file:///C:/Users/ADMIN/Desktop/DOANIOT/lienhe.html"><i class="fa fa-phone" aria-hidden="true"></i>liên Hệ</a></li>
+                    
+                
+
+								</ul>
+							</li>
+						</ul>
+					</nav>
+				</div>
+			</div>
+		</header>
+	</div>
+
+
+
+
+</div>
+		<script src="./dk_files/include-header.js" type="module"></script>
+
+		<!-- nội dung -->
+		<div class="content">
+
+			<h1 class="add-title"><b><br>ĐIỀU KHIỂN ĐÈN NHIỆT VÀ HỆ THÔNG PHUN SƯƠNG</b></h1>
+			<div class="box-width centerled add-box-background ">
+
+
+				<table class="info-table">
+					<tbody>
+						<tr>
+							<td>
+								<p style="font-size: 150%; color:#990000">
+											
+								<b> CÀI ĐẶT CHẾ ĐỘ</b></p></td>
+							<td><p style="font-size: 150%; color:#990000">
+							<b>CÀI ĐẶT ĐỘ ẨM</b></p></td>								
+						<tr>
+							<tr>
+							<td>
+								<p style="font-size: 120%; color:#000077">											
+									<b id="thongke1"> </b></p></td>								
+							<td><p style="font-size: 120%; color:#000077">
+							<b id="thongke2"></b></p></td>														
+						</tr>
+							<tr>
+							<td>
+								<p style="font-size: 120%; color:#000077">											
+									<b id="trangthai1"> </b></p></td>
+							<td><p style="font-size: 120%; color:#000077">
+							<b id="trangthai2"></b></p></td>								
+						</tr>
+						<td>
+							<ul
+								<h4> Nhập thời gian đ.</h4>
+								<br>
+							</ul>
+						</td>
+						<td>
+							<ul 
+							<h4> <br> Nhập độ ẩm và nhấn Submit.</h4>
+									<br><br>
+							</ul>
+						</td>
+					</tr>
+										
+				<tr>
+							<td>
+								
+								<form name="form1">
+								        <br><br>
+								        <label for="Nhap"><b>Temperature</b></label>
+								        <input type="text" id="nhap" value="0"> <br> <br>								        
+								        <input type = "button" value = "Submit" onclick = "nhapHang(form1.nhap.value,thongKe)">
+								<br><br>
+							</td>
+							<td>		
+								 <br><br>
+								        <label for="Xuat"><b>Humidity</b></label>
+								        <input type="text" id="xuat" value="0"> <br> <br>								
+								        <input type = "button" value = "Submit " onclick = "xuatHang(form1.xuat.value,thongKe)">
+								   <br><br>
+								  </form>
+							
+							</td>
+							
+					</tr>
+				
+					</tbody>
+				</table>
+				
+
+			</div>
+
+
+		</div>
+		
+		<div id="footer">
+
+
+
+	
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Footer</title>
+
+	<style>
+		.footer-container a,
+		.footer-container a:hover,
+		.footer-container a:visited {
+			color: transparent;
+			text-decoration: none;
+		}
+
+
+		.footer-container {
+			background: linear-gradient(135deg,   #0000FF 10%,      #FFFF00 100%);
+			width: 100vw;
+			height: 45px;
+			display: flex;
+			align-items: center;
+
+		}
+
+		.footer-container p {
+			flex: 1;
+			text-align: center;
+			color: white;
+			font-size: 15px;
+			margin: 0
+		}
+
+		.footer-avt {
+			height: 100%;
+			display: flex;
+			align-items: center;
+		}
+		
+		
+		
+		.footer-avt a {
+			display: flex;
+			align-items: center;
+		}
+		
+		.teacher-avt a {
+			display: flex;
+			align-items: center;
+		}
+	
+		
+		
+
+		.footer-avt img,
+		.teacher-avt img {
+			margin-right: 30px;
+			border-radius: 50%;
+			width: 25px;
+		}
+
+		.teacher-avt img {
+			margin-left: 8px;
+
+		}
+
+		.footer-avt img:hover {
+			border: 2px solid black;
+		}
+	</style>
+
+
+
+
+
+	<div class="footer-container">
+
+		<div class="teacher-avt">
+			<a href="https://qldiem.ctu.edu.vn/htql/canbo/llkh/codes/LyLichKhoaHoc_in.php?macb=002128/">
+				<img src="./anh/giaovien.png" alt="">
+			</a>
+		</div>
+
+		 <p id="copyright">Copyright © 2022 - Nhóm 1</p>
+
+	 
+		 <div class="footer-avt">
+          
+			<a href="https://www.facebook.com/profile.php?id=100009953882866">
+			  <img src="./anh/toan.jpg" >
+			</a>
+			
+			<a href="https://www.facebook.com/co.mai.334839">
+			  <img src="./anh/kha.jpg" >
+			
+			<a href="https://www.facebook.com/nguyenhaison2001">
+			  <img src="./anh/son.jpg">
+			</a>
+			
+			<a href="https://www.facebook.com/nhat.thachminh.50">
+			  <img src="./anh/nhat.jpg" >
+			</a>
+			
+			<a href="https://www.facebook.com/trongsi1122">
+			  <img src="./anh/trong.jpg.png" >
+			</a>
+		  </div>
+
+
+
+	</div>
+
+
+
+
+
+
+</div>
+		<script src="./dk_files/include-footer.js" type="module"></script>
+
+	</div>
+
+
+
+	<script src="./dk_files/index.js" type="module"></script>
+
+</body></html>
